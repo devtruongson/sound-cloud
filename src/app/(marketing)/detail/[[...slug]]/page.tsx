@@ -11,12 +11,13 @@ interface IPops {
     searchParams: {
         pid: string | undefined;
         edit: "0" | undefined;
+        isPLay: "1" | undefined;
     };
 }
 
 export default async function DetailTrackPage({
     params: { slug },
-    searchParams: { pid, edit },
+    searchParams: { pid, edit, isPLay },
 }: IPops) {
     const slugUser = slug[0];
     const fileTrack = slug[1].split(".")[0].split("I")[1];

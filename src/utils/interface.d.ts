@@ -41,3 +41,10 @@ export interface IUser {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface ITRackSaveLocal {
+    fileName: string;
+    url_current: string;
+    track_parent: string;
+    is_active: boolean;
+}

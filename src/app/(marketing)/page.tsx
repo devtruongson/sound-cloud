@@ -10,7 +10,6 @@ import SlugGenerate from "@/helpers/generateSlug";
 
 export default async function HomePage() {
     const data = await getTrack(1, 10);
-
     return (
         <div>
             <div className="item">
@@ -24,7 +23,9 @@ export default async function HomePage() {
                                         : configApp.noAccount
                                 }/${SlugGenerate({
                                     title: item.title,
-                                })}-I${item.file}.html?pid=${item._id}&edit=0`}
+                                })}-I${item.file}.html?pid=${
+                                    item._id
+                                }&edit=0&isPLay=1`}
                             >
                                 <Card sx={{ maxWidth: 345 }}>
                                     <CardActionArea>

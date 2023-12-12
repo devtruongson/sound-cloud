@@ -4,9 +4,11 @@ import { useServerInsertedHTML } from "next/navigation";
 import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ThemeContext } from "./theme/ThemContext";
 import { themeLightDefault } from "./theme/theme";
+import { TrackContext } from "./TrackContext/TrackContext";
+import WaveSurfer from "wavesurfer.js";
 
 export default function ThemeRegistry(props: any) {
     const { options, children } = props;
@@ -55,6 +57,30 @@ export default function ThemeRegistry(props: any) {
         currentTheme: themeLightDefault,
         mode: "light",
     });
+    const [isPlay, setIsPlay] = React.useState<boolean>(false);
+    const [audioRef, setAudioRef] = useState<{
+        current: null | WaveSurfer;
+    }>({
+        current: null,
+    });
+    const [currentTime, setCurrentTime] = useState<number>(0);
+
+    useEffect(() => {
+        const list_music = JSON.parse(
+            localStorage.getItem("list_music") || "false"
+        ) as boolean;
+        if (!list_music) {
+            localStorage.setItem("list_music", JSON.stringify([]));
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!audioRef.current) return;
+        isPlay ? audioRef.current.play() : audioRef.current.pause();
+        console.log("render effect");
+    }, [isPlay, audioRef]);
+
+    console.log(isPlay);
 
     return (
         <CacheProvider value={cache}>
@@ -69,10 +95,29 @@ export default function ThemeRegistry(props: any) {
                     },
                 }}
             >
-                <ThemeProvider theme={themeProviderValue.currentTheme}>
-                    <CssBaseline />
-                    {children}
-                </ThemeProvider>
+                <TrackContext.Provider
+                    value={{
+                        AudioTrack: () => {
+                            return {
+                                current: audioRef.current,
+                                isPlay: isPlay,
+                                currentTime,
+                            };
+                        },
+                        setAudio() {
+                            return {
+                                setAudioRef,
+                                SetIsPlay: setIsPlay,
+                                setCurrentTime,
+                            };
+                        },
+                    }}
+                >
+                    <ThemeProvider theme={themeProviderValue.currentTheme}>
+                        <CssBaseline />
+                        {children}
+                    </ThemeProvider>
+                </TrackContext.Provider>
             </ThemeContext.Provider>
         </CacheProvider>
     );
