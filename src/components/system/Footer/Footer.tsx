@@ -63,7 +63,7 @@ export default function Footer() {
     React.useEffect(() => {
         if (!ActionAudio.AudioTrack().currentTime || !ref.current) return;
         ref.current.setTime(ActionAudio.AudioTrack().currentTime);
-    }, [ActionAudio.AudioTrack().currentTime]);
+    }, [ActionAudio]);
 
     return (
         <div className="fixed bottom-[0px] w-full h-[40px]">

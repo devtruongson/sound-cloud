@@ -45,7 +45,7 @@ const Track = ({ fileName }: { fileName: string }) => {
         AudioRef.AudioTrack().current?.setTime(
             AudioRef.AudioTrack().currentTime
         );
-    }, [AudioRef.AudioTrack().currentTime]);
+    }, [AudioRef]);
 
     useEffect(() => {
         const DivELement = ref.current;
