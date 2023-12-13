@@ -1,6 +1,7 @@
 import { TrackContext } from "@/lib/TrackContext/TrackContext";
+import { ITRackSaveLocal } from "@/utils/interface";
 import { usePathname } from "next/navigation";
-import React, { memo, useContext, useEffect, useRef } from "react";
+import React, { memo, useContext, useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import HoverPlugin from "wavesurfer.js/dist/plugins/hover.js";
 
@@ -24,10 +25,18 @@ const Track = ({ fileName }: { fileName: string }) => {
                     }),
                 ],
             });
-            audio.setMuted(true);
             audio.on("seeking", (time: number) => {
                 if (!time) return;
-                AudioRef.setAudio().setCurrentTime(time);
+                if (
+                    fileName ===
+                    (
+                        JSON.parse(
+                            localStorage.getItem("list_music") || "[]"
+                        ) as ITRackSaveLocal[]
+                    ).find((track) => track.is_active)?.fileName
+                ) {
+                    AudioRef.setAudio().setCurrentTime(time);
+                }
             });
             AudioRef.setAudio().setAudioRef({
                 current: audio,
@@ -39,13 +48,19 @@ const Track = ({ fileName }: { fileName: string }) => {
     useEffect(() => {
         if (
             !AudioRef.AudioTrack().currentTime ||
-            !AudioRef.AudioTrack().current
+            !AudioRef.AudioTrack().current ||
+            fileName !==
+                (
+                    JSON.parse(
+                        localStorage.getItem("list_music") || "[]"
+                    ) as ITRackSaveLocal[]
+                ).find((track) => track.is_active)?.fileName
         )
             return;
         AudioRef.AudioTrack().current?.setTime(
             AudioRef.AudioTrack().currentTime
         );
-    }, [AudioRef]);
+    }, [AudioRef, fileName]);
 
     useEffect(() => {
         const DivELement = ref.current;

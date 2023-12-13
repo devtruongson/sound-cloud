@@ -1,11 +1,18 @@
 "use client";
 import WaveSurfer from "wavesurfer.js";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+    Suspense,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { ITRack, ITRackSaveLocal, IUser } from "@/utils/interface";
 import Track from "./Track";
 import { TrackContext } from "@/lib/TrackContext/TrackContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Footer from "@/components/system/Footer/Footer";
 
 const TrackWaveSurfer = ({
     trackName,
@@ -16,9 +23,11 @@ const TrackWaveSurfer = ({
 }) => {
     const TrackAction = useContext(TrackContext).AudioTrack()
         .current as WaveSurfer;
+    const AudioAction = useContext(TrackContext);
     const patname = usePathname();
 
     useEffect(() => {
+        if (AudioAction.AudioTrack().isPlay) return;
         const listTrack = JSON.parse(
             localStorage.getItem("list_music") || "[]"
         ) as ITRackSaveLocal[];
@@ -46,6 +55,12 @@ const TrackWaveSurfer = ({
         localStorage.setItem("list_music", JSON.stringify(newTrackList));
     }, []);
 
+    const handleClick = () => {
+        if (TrackAction) {
+            TrackAction.play();
+        }
+    };
+
     return (
         <div id="detail-track">
             <div className="info-track">
@@ -60,12 +75,16 @@ const TrackWaveSurfer = ({
                         Tua
                     </button>
                     <h1>{detail.title}</h1>
-                    <Link href="/detail/no-account/anh-se-di-tim-mot-giac-mo-khac-Id5e1d531caa8197f0f36009ed1e41dfa.html?pid=6575692d6043ef61152b0b6f&edit=0&isPLay=1">
+                    <Link
+                        onClick={handleClick}
+                        href="/detail/no-account/anh-se-di-tim-mot-giac-mo-khac-Id5e1d531caa8197f0f36009ed1e41dfa.html?pid=6575692d6043ef61152b0b6f&edit=0&isPLay=1"
+                    >
                         Chuyen Link
                     </Link>
                 </div>
             </div>
             <Track fileName={trackName} />
+            <Footer />
         </div>
     );
 };

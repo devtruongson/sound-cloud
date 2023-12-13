@@ -74,14 +74,6 @@ export default function ThemeRegistry(props: any) {
         }
     }, []);
 
-    useEffect(() => {
-        if (!audioRef.current) return;
-        isPlay ? audioRef.current.play() : audioRef.current.pause();
-        console.log("render effect");
-    }, [isPlay, audioRef]);
-
-    console.log(isPlay);
-
     return (
         <CacheProvider value={cache}>
             <ThemeContext.Provider

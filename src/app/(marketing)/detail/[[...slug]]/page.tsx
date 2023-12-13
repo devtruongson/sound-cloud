@@ -3,6 +3,7 @@ import { getDetailTrack } from "@/lib/services/get-track";
 import { configApp } from "@/utils/enum";
 import { Grid } from "@mui/material";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 interface IPops {
     params: {
@@ -34,7 +35,9 @@ export default async function DetailTrackPage({
         <div>
             <Grid container spacing={1}>
                 <Grid item sm={12}>
-                    <TrackWaveSurfer detail={data} trackName={fileTrack} />
+                    <Suspense fallback={<div>Dang Tai Trang .......</div>}>
+                        <TrackWaveSurfer detail={data} trackName={fileTrack} />
+                    </Suspense>
                 </Grid>
                 <Grid item sm={3}>
                     Render bên phải
